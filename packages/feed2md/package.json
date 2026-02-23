@@ -1,0 +1,55 @@
+{
+  "name": "@myx0m0p/feed2md",
+  "version": "0.1.0",
+  "description": "Convert RSS and Atom feeds to readable Markdown",
+  "license": "MIT",
+  "type": "module",
+  "packageManager": "pnpm@10.14.0",
+  "engines": {
+    "node": ">=24"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/myx0m0p/feed2md.git",
+    "directory": "packages/feed2md"
+  },
+  "bugs": {
+    "url": "https://github.com/myx0m0p/feed2md/issues"
+  },
+  "homepage": "https://github.com/myx0m0p/feed2md#readme",
+  "keywords": [
+    "atom",
+    "feed",
+    "markdown",
+    "rss",
+    "typescript"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rm -rf dist coverage",
+    "lint": "tsc --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "eta": "^4.5.1",
+    "fast-xml-parser": "^5.3.7"
+  }
+}

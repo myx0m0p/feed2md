@@ -1,10 +1,9 @@
 #!/usr/bin/env node
 import { readFile, writeFile } from 'node:fs/promises'
 
+import { feed2md } from '@myx0m0p/feed2md'
+import type { MarkdownTemplatePreset } from '@myx0m0p/feed2md'
 import { Command } from 'commander'
-
-import { feed2md } from './index.js'
-import type { MarkdownTemplatePreset } from './types.js'
 
 function parsePositiveInteger(optionName: string, value: string): number {
   const parsed = Number.parseInt(value, 10)

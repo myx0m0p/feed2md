@@ -35,7 +35,7 @@ jobs:
         run: |
           node <<'NODE'
           const fs = require('node:fs')
-          const summary = JSON.parse(fs.readFileSync('coverage/coverage-summary.json', 'utf8')).total
+          const summary = JSON.parse(fs.readFileSync('packages/feed2md/coverage/coverage-summary.json', 'utf8')).total
           const line = `Lines: ${summary.lines.pct}% | Statements: ${summary.statements.pct}% | Functions: ${summary.functions.pct}% | Branches: ${summary.branches.pct}%`
           console.log(line)
           fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `## Coverage\n\n${line}\n`)

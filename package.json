@@ -1,71 +1,22 @@
 {
-  "name": "@myx0m0p/feed2md",
-  "version": "0.1.0",
-  "description": "Convert RSS and Atom feeds to readable Markdown",
-  "license": "MIT",
-  "type": "module",
+  "name": "feed2md-workspace",
+  "private": true,
   "packageManager": "pnpm@10.14.0",
   "engines": {
     "node": ">=24"
   },
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    }
-  },
-  "bin": {
-    "feed2md": "dist/cli.js"
-  },
-  "files": [
-    "dist",
-    "README.md",
-    "LICENSE",
-    "CONTRIBUTING.md",
-    "CODE_OF_CONDUCT.md",
-    "SECURITY.md"
-  ],
-  "sideEffects": false,
-  "publishConfig": {
-    "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/myx0m0p/feed2md.git"
-  },
-  "bugs": {
-    "url": "https://github.com/myx0m0p/feed2md/issues"
-  },
-  "homepage": "https://github.com/myx0m0p/feed2md#readme",
-  "keywords": [
-    "atom",
-    "cli",
-    "feed",
-    "markdown",
-    "rss",
-    "typescript"
-  ],
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
+    "build": "pnpm -r --if-present build",
     "changeset": "changeset",
-    "coverage": "vitest run --coverage",
-    "clean": "rm -rf dist coverage",
+    "clean": "pnpm -r --if-present clean && rm -rf coverage dist",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
-    "lint": "tsc --noEmit",
-    "prepack": "pnpm build",
+    "lint": "pnpm --filter @myx0m0p/feed2md build && pnpm -r --if-present lint",
     "release": "changeset publish",
-    "test": "vitest run",
-    "test:coverage": "pnpm coverage",
-    "test:watch": "vitest",
+    "test": "pnpm -r --if-present test",
+    "test:coverage": "pnpm --filter @myx0m0p/feed2md test:coverage",
+    "test:watch": "pnpm --filter @myx0m0p/feed2md test:watch",
     "version-packages": "changeset version"
-  },
-  "dependencies": {
-    "commander": "^14.0.3",
-    "eta": "^4.5.1",
-    "fast-xml-parser": "^5.3.7"
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.8",

@@ -1,17 +1,11 @@
 {
-  "compilerOptions": {
-    "target": "ES2022",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "strict": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true,
-    "declaration": true,
-    "sourceMap": true,
-    "rootDir": ".",
-    "outDir": "dist",
-    "types": ["node", "vitest/globals"]
-  },
-  "include": ["src", "test"]
+  "files": [],
+  "references": [
+    {
+      "path": "./packages/feed2md"
+    },
+    {
+      "path": "./packages/feed2md-cli"
+    }
+  ]
 }
