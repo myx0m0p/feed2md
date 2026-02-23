@@ -2,8 +2,8 @@
 import { readFile, writeFile } from 'node:fs/promises'
 import { createRequire } from 'node:module'
 
-import { feed2md } from '@myx0m0p/feed2md'
-import type { MarkdownTemplatePreset } from '@myx0m0p/feed2md'
+import { feed2md } from 'feed2md'
+import type { MarkdownTemplatePreset } from 'feed2md'
 import { Command } from 'commander'
 
 const require = createRequire(import.meta.url)

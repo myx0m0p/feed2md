@@ -1,6 +1,6 @@
 {
-  "name": "@myx0m0p/feed2md-cli",
-  "version": "0.2.1",
+  "name": "feed2md-cli",
+  "version": "0.0.0",
   "description": "CLI for converting RSS and Atom feeds to Markdown",
   "license": "MIT",
   "type": "module",
@@ -40,7 +40,7 @@
     "lint": "tsc --noEmit"
   },
   "dependencies": {
-    "@myx0m0p/feed2md": "workspace:*",
+    "feed2md": "workspace:*",
     "commander": "^14.0.3"
   }
 }

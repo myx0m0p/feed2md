@@ -1,6 +1,6 @@
 # feed2md
 
-[![npm version](https://img.shields.io/npm/v/%40myx0m0p%2Ffeed2md)](https://www.npmjs.com/package/@myx0m0p/feed2md)
+[![npm version](https://img.shields.io/npm/v/feed2md)](https://www.npmjs.com/package/feed2md)
 [![CI](https://github.com/myx0m0p/feed2md/actions/workflows/ci.yml/badge.svg)](https://github.com/myx0m0p/feed2md/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Node.js >=24](https://img.shields.io/badge/node-%3E%3D24-339933)](https://nodejs.org)
@@ -9,8 +9,8 @@
 
 It ships as:
 
-- a library package: `@myx0m0p/feed2md`
-- a CLI package: `@myx0m0p/feed2md-cli`
+- a library package: `feed2md`
+- a CLI package: `feed2md-cli`
 
 ## Why this project
 
@@ -24,7 +24,7 @@ It ships as:
 <summary><strong>Library (npm)</strong></summary>
 
 ```bash
-npm install @myx0m0p/feed2md
+npm install feed2md
 ```
 
 </details>
@@ -33,7 +33,7 @@ npm install @myx0m0p/feed2md
 <summary><strong>Library (pnpm)</strong></summary>
 
 ```bash
-pnpm add @myx0m0p/feed2md
+pnpm add feed2md
 ```
 
 </details>
@@ -42,7 +42,7 @@ pnpm add @myx0m0p/feed2md
 <summary><strong>CLI (npm)</strong></summary>
 
 ```bash
-npx @myx0m0p/feed2md-cli <feed-url> [options]
+npx feed2md-cli <feed-url> [options]
 ```
 
 </details>
@@ -51,7 +51,7 @@ npx @myx0m0p/feed2md-cli <feed-url> [options]
 <summary><strong>CLI (pnpm)</strong></summary>
 
 ```bash
-pnpm dlx @myx0m0p/feed2md-cli <feed-url> [options]
+pnpm dlx feed2md-cli <feed-url> [options]
 ```
 
 </details>
@@ -62,7 +62,7 @@ pnpm dlx @myx0m0p/feed2md-cli <feed-url> [options]
 <summary><strong>npm (npx)</strong></summary>
 
 ```bash
-npx @myx0m0p/feed2md-cli <feed-url> [options]
+npx feed2md-cli <feed-url> [options]
 ```
 
 </details>
@@ -71,7 +71,7 @@ npx @myx0m0p/feed2md-cli <feed-url> [options]
 <summary><strong>pnpm</strong></summary>
 
 ```bash
-pnpm dlx @myx0m0p/feed2md-cli <feed-url> [options]
+pnpm dlx feed2md-cli <feed-url> [options]
 ```
 
 </details>
@@ -89,25 +89,25 @@ Examples:
 
 ```bash
 # print to stdout
-npx @myx0m0p/feed2md-cli https://example.com/feed.xml
+npx feed2md-cli https://example.com/feed.xml
 
 # write to a file
-npx @myx0m0p/feed2md-cli https://example.com/feed.xml --output feed.md
+npx feed2md-cli https://example.com/feed.xml --output feed.md
 
 # limit items and shorten previews
-npx @myx0m0p/feed2md-cli https://example.com/feed.xml --limit 5 --summary-max-length 140
+npx feed2md-cli https://example.com/feed.xml --limit 5 --summary-max-length 140
 
 # render with full metadata template
-npx @myx0m0p/feed2md-cli https://example.com/feed.xml --template full
+npx feed2md-cli https://example.com/feed.xml --template full
 
 # render with a custom Eta template file
-npx @myx0m0p/feed2md-cli https://example.com/feed.xml --template-file ./templates/feed.eta
+npx feed2md-cli https://example.com/feed.xml --template-file ./templates/feed.eta
 ```
 
 ## Library usage
 
 ```ts
-import { feed2md } from '@myx0m0p/feed2md'
+import { feed2md } from 'feed2md'
 
 const markdown = await feed2md('https://example.com/feed.xml', {
   limit: 10,

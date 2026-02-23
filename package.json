@@ -11,11 +11,11 @@
     "clean": "pnpm -r --if-present clean && rm -rf coverage dist",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
-    "lint": "pnpm --filter @myx0m0p/feed2md build && pnpm -r --if-present lint",
+    "lint": "pnpm --filter feed2md build && pnpm -r --if-present lint",
     "release": "changeset publish",
     "test": "pnpm -r --if-present test",
-    "test:coverage": "pnpm --filter @myx0m0p/feed2md test:coverage",
-    "test:watch": "pnpm --filter @myx0m0p/feed2md test:watch",
+    "test:coverage": "pnpm --filter feed2md test:coverage",
+    "test:watch": "pnpm --filter feed2md test:watch",
     "version-packages": "changeset version"
   },
   "devDependencies": {
