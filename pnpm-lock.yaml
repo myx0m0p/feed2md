@@ -7,16 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      commander:
-        specifier: ^14.0.3
-        version: 14.0.3
-      eta:
-        specifier: ^4.5.1
-        version: 4.5.1
-      fast-xml-parser:
-        specifier: ^5.3.7
-        version: 5.3.7
     devDependencies:
       '@changesets/cli':
         specifier: ^2.29.8
@@ -39,6 +29,24 @@ importers:
       vitest:
         specifier: ^4.0.18
         version: 4.0.18(@types/node@25.3.0)
+
+  packages/feed2md:
+    dependencies:
+      eta:
+        specifier: ^4.5.1
+        version: 4.5.1
+      fast-xml-parser:
+        specifier: ^5.3.7
+        version: 5.3.7
+
+  packages/feed2md-cli:
+    dependencies:
+      '@myx0m0p/feed2md':
+        specifier: workspace:*
+        version: link:../feed2md
+      commander:
+        specifier: ^14.0.3
+        version: 14.0.3
 
 packages:
 

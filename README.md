@@ -9,8 +9,8 @@
 
 It ships as:
 
-- a TypeScript library
-- a CLI tool for terminal workflows
+- a library package: `@myx0m0p/feed2md`
+- a CLI package: `@myx0m0p/feed2md-cli`
 
 ## Why this project
 
@@ -21,7 +21,7 @@ It ships as:
 ## Installation
 
 <details open>
-<summary><strong>npm</strong></summary>
+<summary><strong>Library (npm)</strong></summary>
 
 ```bash
 npm install @myx0m0p/feed2md
@@ -30,10 +30,28 @@ npm install @myx0m0p/feed2md
 </details>
 
 <details>
-<summary><strong>pnpm</strong></summary>
+<summary><strong>Library (pnpm)</strong></summary>
 
 ```bash
 pnpm add @myx0m0p/feed2md
+```
+
+</details>
+
+<details>
+<summary><strong>CLI (npm)</strong></summary>
+
+```bash
+npx @myx0m0p/feed2md-cli <feed-url> [options]
+```
+
+</details>
+
+<details>
+<summary><strong>CLI (pnpm)</strong></summary>
+
+```bash
+pnpm dlx @myx0m0p/feed2md-cli <feed-url> [options]
 ```
 
 </details>
@@ -44,7 +62,7 @@ pnpm add @myx0m0p/feed2md
 <summary><strong>npm (npx)</strong></summary>
 
 ```bash
-npx @myx0m0p/feed2md <feed-url> [options]
+npx @myx0m0p/feed2md-cli <feed-url> [options]
 ```
 
 </details>
@@ -53,7 +71,7 @@ npx @myx0m0p/feed2md <feed-url> [options]
 <summary><strong>pnpm</strong></summary>
 
 ```bash
-pnpm dlx @myx0m0p/feed2md <feed-url> [options]
+pnpm dlx @myx0m0p/feed2md-cli <feed-url> [options]
 ```
 
 </details>
@@ -71,19 +89,19 @@ Examples:
 
 ```bash
 # print to stdout
-npx @myx0m0p/feed2md https://example.com/feed.xml
+npx @myx0m0p/feed2md-cli https://example.com/feed.xml
 
 # write to a file
-npx @myx0m0p/feed2md https://example.com/feed.xml --output feed.md
+npx @myx0m0p/feed2md-cli https://example.com/feed.xml --output feed.md
 
 # limit items and shorten previews
-npx @myx0m0p/feed2md https://example.com/feed.xml --limit 5 --summary-max-length 140
+npx @myx0m0p/feed2md-cli https://example.com/feed.xml --limit 5 --summary-max-length 140
 
 # render with full metadata template
-npx @myx0m0p/feed2md https://example.com/feed.xml --template full
+npx @myx0m0p/feed2md-cli https://example.com/feed.xml --template full
 
 # render with a custom Eta template file
-npx @myx0m0p/feed2md https://example.com/feed.xml --template-file ./templates/feed.eta
+npx @myx0m0p/feed2md-cli https://example.com/feed.xml --template-file ./templates/feed.eta
 ```
 
 ## Library usage

@@ -1,0 +1,46 @@
+{
+  "name": "@myx0m0p/feed2md-cli",
+  "version": "0.1.0",
+  "description": "CLI for converting RSS and Atom feeds to Markdown",
+  "license": "MIT",
+  "type": "module",
+  "packageManager": "pnpm@10.14.0",
+  "engines": {
+    "node": ">=24"
+  },
+  "bin": {
+    "feed2md": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/myx0m0p/feed2md.git",
+    "directory": "packages/feed2md-cli"
+  },
+  "bugs": {
+    "url": "https://github.com/myx0m0p/feed2md/issues"
+  },
+  "homepage": "https://github.com/myx0m0p/feed2md#readme",
+  "keywords": [
+    "atom",
+    "cli",
+    "feed",
+    "markdown",
+    "rss"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rm -rf dist",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@myx0m0p/feed2md": "workspace:*",
+    "commander": "^14.0.3"
+  }
+}

@@ -36,7 +36,7 @@ jobs:
           pnpm lint
           pnpm test:coverage
           pnpm build
-          npm pack --dry-run
+          pnpm -r --filter "./packages/*" exec npm pack --dry-run
 
       - name: Create release PR or publish package
         uses: changesets/action@v1
