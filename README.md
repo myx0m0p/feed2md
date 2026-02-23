@@ -20,15 +20,43 @@ It ships as:
 
 ## Installation
 
+<details open>
+<summary><strong>npm</strong></summary>
+
+```bash
+npm install @myx0m0p/feed2md
+```
+
+</details>
+
+<details>
+<summary><strong>pnpm</strong></summary>
+
 ```bash
 pnpm add @myx0m0p/feed2md
 ```
 
+</details>
+
 ## CLI usage
+
+<details open>
+<summary><strong>npm (npx)</strong></summary>
+
+```bash
+npx @myx0m0p/feed2md <feed-url> [options]
+```
+
+</details>
+
+<details>
+<summary><strong>pnpm</strong></summary>
 
 ```bash
 pnpm dlx @myx0m0p/feed2md <feed-url> [options]
 ```
+
+</details>
 
 Options:
 
@@ -41,13 +69,13 @@ Examples:
 
 ```bash
 # print to stdout
-pnpm dlx @myx0m0p/feed2md https://example.com/feed.xml
+npx @myx0m0p/feed2md https://example.com/feed.xml
 
 # write to a file
-pnpm dlx @myx0m0p/feed2md https://example.com/feed.xml --output feed.md
+npx @myx0m0p/feed2md https://example.com/feed.xml --output feed.md
 
 # limit items and shorten previews
-pnpm dlx @myx0m0p/feed2md https://example.com/feed.xml --limit 5 --summary-max-length 140
+npx @myx0m0p/feed2md https://example.com/feed.xml --limit 5 --summary-max-length 140
 ```
 
 ## Library usage

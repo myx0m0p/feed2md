@@ -31,8 +31,18 @@ jobs:
       - name: Lint
         run: pnpm lint
 
-      - name: Test
-        run: pnpm test
+      - name: Test with coverage
+        run: pnpm test:coverage
+
+      - name: Coverage summary
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs')
+          const summary = JSON.parse(fs.readFileSync('coverage/coverage-summary.json', 'utf8')).total
+          const line = `Lines: ${summary.lines.pct}% | Statements: ${summary.statements.pct}% | Functions: ${summary.functions.pct}% | Branches: ${summary.branches.pct}%`
+          console.log(line)
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `## Coverage\n\n${line}\n`)
+          NODE
 
       - name: Build
         run: pnpm build

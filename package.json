@@ -39,16 +39,6 @@
     "url": "https://github.com/myx0m0p/feed2md/issues"
   },
   "homepage": "https://github.com/myx0m0p/feed2md#readme",
-  "scripts": {
-    "build": "tsc -p tsconfig.build.json",
-    "clean": "rm -rf dist coverage",
-    "format": "prettier . --write",
-    "format:check": "prettier . --check",
-    "lint": "tsc --noEmit",
-    "prepare": "pnpm run build",
-    "test": "vitest run",
-    "test:watch": "vitest"
-  },
   "keywords": [
     "atom",
     "cli",
@@ -57,13 +47,25 @@
     "rss",
     "typescript"
   ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "coverage": "vitest run --coverage",
+    "clean": "rm -rf dist coverage",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check",
+    "lint": "tsc --noEmit",
+    "test": "vitest run",
+    "test:coverage": "pnpm coverage",
+    "test:watch": "vitest"
+  },
   "dependencies": {
     "commander": "^14.0.3",
     "fast-xml-parser": "^5.3.7"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^6.0.2",
-    "@types/node": "^24.0.0",
+    "@types/node": "^25.3.0",
+    "@vitest/coverage-v8": "^4.0.18",
     "prettier": "^3.8.1",
     "typescript": "^5.9.3",
     "vitest": "^4.0.18"
