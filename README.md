@@ -179,7 +179,21 @@ Useful scripts:
 
 - `pnpm format`
 - `pnpm format:check`
+- `pnpm changeset`
 - `pnpm test:watch`
+
+## Release
+
+This repo uses [Changesets](https://github.com/changesets/changesets) + GitHub Actions.
+
+1. Add a changeset in feature/fix PRs:
+
+   ```bash
+   pnpm changeset
+   ```
+
+2. Merge to `main`. The `Release` workflow will open/update a version PR.
+3. Merge the version PR to publish to npm.
 
 ## Contributing
 
