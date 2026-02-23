@@ -1,6 +1,6 @@
 {
   "name": "feed2md-cli",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "CLI for converting RSS and Atom feeds to Markdown",
   "license": "MIT",
   "type": "module",
