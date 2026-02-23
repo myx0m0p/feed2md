@@ -1,5 +1,11 @@
 # @myx0m0p/feed2md-cli
 
+## 0.2.1
+
+### Patch Changes
+
+- f2603b5: Add `-v`/`--version` support to print the CLI package version.
+
 ## 0.2.0
 
 ### Minor Changes
