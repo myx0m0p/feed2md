@@ -1,15 +1,14 @@
-# @myx0m0p/feed2md
+# @myx0m0p/feed2md-cli
 
-## 1.0.0
+## 0.2.0
 
-### Major Changes
+### Minor Changes
 
 - 40bd96d: Split the CLI into a separate `@myx0m0p/feed2md-cli` package so the library package no longer depends on `commander`.
 
   The `@myx0m0p/feed2md` package is now library-only and no longer ships the `feed2md` binary.
 
-## 0.1.0
+### Patch Changes
 
-### Minor Changes
-
-- c1262e2: Initial public release of `@myx0m0p/feed2md`.
+- Updated dependencies [40bd96d]
+  - @myx0m0p/feed2md@1.0.0

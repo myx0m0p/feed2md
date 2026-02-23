@@ -1,6 +1,6 @@
 {
   "name": "@myx0m0p/feed2md",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Convert RSS and Atom feeds to readable Markdown",
   "license": "MIT",
   "type": "module",
