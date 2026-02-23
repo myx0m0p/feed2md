@@ -1,9 +1,13 @@
 #!/usr/bin/env node
 import { readFile, writeFile } from 'node:fs/promises'
+import { createRequire } from 'node:module'
 
 import { feed2md } from '@myx0m0p/feed2md'
 import type { MarkdownTemplatePreset } from '@myx0m0p/feed2md'
 import { Command } from 'commander'
+
+const require = createRequire(import.meta.url)
+const { version } = require('../package.json') as { version: string }
 
 function parsePositiveInteger(optionName: string, value: string): number {
   const parsed = Number.parseInt(value, 10)
@@ -28,6 +32,7 @@ const program = new Command()
 program
   .name('feed2md')
   .description('Convert RSS/Atom feed URL to Markdown')
+  .version(version, '-v, --version', 'Output the current version')
   .argument('<url>', 'RSS/Atom feed URL')
   .option('-o, --output <file>', 'Write output to a file instead of stdout')
   .option('--limit <number>', 'Limit the number of articles', (value) =>
