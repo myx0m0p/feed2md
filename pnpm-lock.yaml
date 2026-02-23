@@ -41,7 +41,7 @@ importers:
 
   packages/feed2md-cli:
     dependencies:
-      '@myx0m0p/feed2md':
+      'feed2md':
         specifier: workspace:*
         version: link:../feed2md
       commander:

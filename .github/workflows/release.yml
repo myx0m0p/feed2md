@@ -50,4 +50,5 @@ jobs:
           # First publish path: add NPM_TOKEN repository secret (automation/granular token).
           # After package exists, migrate to npm Trusted Publishing and remove this secret.
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_ACCESS: public
           NPM_CONFIG_PROVENANCE: true
