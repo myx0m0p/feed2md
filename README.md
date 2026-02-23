@@ -109,6 +109,15 @@ Options (`Feed2MdOptions`):
 
 Parses RSS/Atom XML into a normalized `ParsedFeed` object.
 
+Normalized data now includes feed/item metadata such as:
+
+- links (`link` + `links[]` with rel/type)
+- ids (`guid`/`id`)
+- authors (`dc:creator` / Atom `author`)
+- categories (RSS `category`, Atom `category term`)
+- media payloads (`media:content`, `media:group`, `media:credit`, `media:description`)
+- feed-level metadata (`description`, `language`, `copyright`, `generator`, `ttl`, `image`)
+
 ### `toMarkdown(feed, options?)`
 
 Renders normalized feed data to Markdown.
@@ -124,8 +133,8 @@ Often yes, but it depends on the feed publisher.
 
 Common fields used by `feed2md`:
 
-- RSS: `description`, `content:encoded`, `content`, `dc:description`
-- Atom: `summary`, `content`, `subtitle`, `media:description`
+- RSS: `description`, `content:encoded`, `content`, `dc:description`, `dc:creator`, `category`, `guid`, `media:*`
+- Atom: `summary`, `content`, `subtitle`, `author`, `category`, `id`, `link`, `updated`, `published`
 
 If no summary-like field exists, output includes title/link/published date only.
 

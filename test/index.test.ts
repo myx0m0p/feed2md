@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import { feed2md, parseFeed, toMarkdown } from '../src/index.js'
-import { sampleAtom, sampleRss } from './fixtures.js'
+import { cnnTopStoriesRss, nytTechnologyRss, richAtomFeed, sampleAtom, sampleRss } from './fixtures.js'
 
 describe('parseFeed', () => {
   it('parses RSS feeds', () => {
@@ -20,6 +20,72 @@ describe('parseFeed', () => {
     const parsed = parseFeed(sampleRss)
     expect(parsed.items[1]?.summary).toContain('content:encoded')
   })
+
+  it('extracts NYT RSS feed metadata and item fields', () => {
+    const parsed = parseFeed(nytTechnologyRss)
+    const item = parsed.items[0]
+
+    expect(parsed.title).toBe('NYT > Technology')
+    expect(parsed.description).toBe('New York Times technology coverage.')
+    expect(parsed.language).toBe('en-us')
+    expect(parsed.updated).toBe('Mon, 23 Feb 2026 06:26:58 +0000')
+    expect(parsed.links?.[0]).toEqual({
+      href: 'https://www.nytimes.com/section/technology',
+    })
+    expect(parsed.links?.[1]).toEqual({
+      href: 'https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml',
+      rel: 'self',
+      type: 'application/rss+xml',
+    })
+    expect(parsed.image?.url).toBe('https://static01.nyt.com/images/misc/NYT_logo_rss_250x40.png')
+    expect(item?.id).toBe('https://www.nytimes.com/2026/02/21/technology/ai-boom-backlash.html')
+    expect(item?.author).toBe('David Streitfeld')
+    expect(item?.categories?.map((category) => category.name)).toEqual([
+      'Artificial Intelligence',
+      'Computers and the Internet',
+    ])
+    expect(item?.media?.[0]).toMatchObject({
+      credit: 'Associated Press',
+      description: 'Sam Altman recently said artificial intelligence was spreading more slowly than expected.',
+      medium: 'image',
+    })
+  })
+
+  it('extracts CNN RSS media groups and channel metadata', () => {
+    const parsed = parseFeed(cnnTopStoriesRss)
+    const item = parsed.items[0]
+
+    expect(parsed.generator).toBe('coredev-bumblebee')
+    expect(parsed.ttl).toBe('10')
+    expect(parsed.updated).toBe('Thu, 22 Aug 2024 15:19:24 GMT')
+    expect(item?.media).toHaveLength(2)
+    expect(item?.media?.[0]).toMatchObject({
+      medium: 'image',
+      type: 'image/jpeg',
+      url: 'https://cdn.cnn.com/cnnnext/dam/assets/230418164538-02-dominion-fox-trial-settlement-0418-super-169.jpg',
+    })
+  })
+
+  it('extracts Atom-specific feed and entry fields', () => {
+    const parsed = parseFeed(richAtomFeed)
+    const item = parsed.items[0]
+
+    expect(parsed.id).toBe('https://www.theverge.com/rss/index.xml')
+    expect(parsed.language).toBe('en')
+    expect(parsed.description).toBe('The Verge feed subtitle')
+    expect(parsed.image?.url).toBe('https://cdn.vox-cdn.com/thumbor/verge-icon.png')
+    expect(parsed.links?.[1]).toEqual({
+      href: 'https://www.theverge.com/rss/index.xml',
+      rel: 'self',
+      type: 'application/atom+xml',
+    })
+    expect(item?.author).toBe('The Verge Staff')
+    expect(item?.id).toBe('tag:www.theverge.com,2026:/sample-story')
+    expect(item?.categories?.[0]).toEqual({
+      name: 'Technology',
+      scheme: 'https://www.theverge.com/rss/index.xml',
+    })
+  })
 })
 
 describe('toMarkdown', () => {
@@ -32,6 +98,19 @@ describe('toMarkdown', () => {
     expect(markdown).toContain('## Articles')
     expect(markdown).toContain('- Article 1 - (https://example.com/article-1)')
     expect(markdown).toContain('Summary: Second article preview from content:encoded\\.')
+  })
+
+  it('renders extended fields from parsed feeds', () => {
+    const parsed = parseFeed(nytTechnologyRss)
+    const markdown = toMarkdown(parsed)
+
+    expect(markdown).toContain('Description: New York Times technology coverage\\.')
+    expect(markdown).toContain('Language: en\\-us')
+    expect(markdown).toContain('Updated: Mon, 23 Feb 2026 06:26:58 \\+0000')
+    expect(markdown).toContain('ID: https://www\\.nytimes\\.com/2026/02/21/technology/ai\\-boom\\-backlash\\.html')
+    expect(markdown).toContain('Author: David Streitfeld')
+    expect(markdown).toContain('Categories: Artificial Intelligence, Computers and the Internet')
+    expect(markdown).toContain('Media: https://static01\\.nyt\\.com/images/2026/02/22/multimedia/21biz\\-ai\\-backlash\\-altman\\-ckvl/21biz\\-ai\\-backlash\\-altman\\-ckvl\\-mediumSquareAt3X\\.jpg')
   })
 
   it('respects item limit', () => {
