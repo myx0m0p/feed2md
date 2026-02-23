@@ -2,9 +2,9 @@
 import { readFile, writeFile } from 'node:fs/promises'
 import { createRequire } from 'node:module'
 
+import { Command } from 'commander'
 import { feed2md } from 'feed2md'
 import type { MarkdownTemplatePreset } from 'feed2md'
-import { Command } from 'commander'
 
 const require = createRequire(import.meta.url)
 const { version } = require('../package.json') as { version: string }
