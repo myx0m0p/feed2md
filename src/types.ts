@@ -1,14 +1,20 @@
+export type MarkdownTemplatePreset = 'full' | 'short'
+
 export interface Feed2MdOptions {
   fetchImpl?: typeof fetch
   includeSummary?: boolean
   limit?: number
   summaryMaxLength?: number
+  template?: string
+  templatePreset?: MarkdownTemplatePreset
 }
 
 export interface MarkdownRenderOptions {
   includeSummary?: boolean
   limit?: number
   summaryMaxLength?: number
+  template?: string
+  templatePreset?: MarkdownTemplatePreset
 }
 
 export interface FeedLink {

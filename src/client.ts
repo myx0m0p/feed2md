@@ -25,5 +25,7 @@ export async function feed2md(url: string, options: Feed2MdOptions = {}): Promis
     includeSummary: options.includeSummary,
     limit: options.limit,
     summaryMaxLength: options.summaryMaxLength,
+    template: options.template,
+    templatePreset: options.templatePreset,
   })
 }

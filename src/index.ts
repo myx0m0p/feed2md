@@ -9,5 +9,6 @@ export type {
   FeedLink,
   FeedMedia,
   MarkdownRenderOptions,
+  MarkdownTemplatePreset,
   ParsedFeed,
 } from './types.js'

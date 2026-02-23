@@ -1,9 +1,10 @@
 #!/usr/bin/env node
-import { writeFile } from 'node:fs/promises'
+import { readFile, writeFile } from 'node:fs/promises'
 
 import { Command } from 'commander'
 
 import { feed2md } from './index.js'
+import type { MarkdownTemplatePreset } from './types.js'
 
 function parsePositiveInteger(optionName: string, value: string): number {
   const parsed = Number.parseInt(value, 10)
@@ -13,6 +14,14 @@ function parsePositiveInteger(optionName: string, value: string): number {
   }
 
   return parsed
+}
+
+function parseTemplatePreset(value: string): MarkdownTemplatePreset {
+  if (value === 'short' || value === 'full') {
+    return value
+  }
+
+  throw new Error('--template must be one of: short, full')
 }
 
 const program = new Command()
@@ -29,16 +38,36 @@ program
   .option('--summary-max-length <number>', 'Maximum summary length in characters', (value) =>
     parsePositiveInteger('--summary-max-length', value),
   )
+  .option(
+    '--template <preset>',
+    'Built-in markdown template preset (short or full). Default: short',
+    parseTemplatePreset,
+    'short',
+  )
+  .option('--template-file <path>', 'Path to a custom Eta template file')
   .action(
     async (
       url: string,
-      options: { limit?: number; output?: string; summary?: boolean; summaryMaxLength?: number },
+      options: {
+        limit?: number
+        output?: string
+        summary?: boolean
+        summaryMaxLength?: number
+        template?: MarkdownTemplatePreset
+        templateFile?: string
+      },
     ) => {
       try {
+        const customTemplate = options.templateFile
+          ? await readFile(options.templateFile, 'utf8')
+          : undefined
+
         const markdown = await feed2md(url, {
           includeSummary: options.summary,
           limit: options.limit,
           summaryMaxLength: options.summaryMaxLength,
+          template: customTemplate,
+          templatePreset: options.template,
         })
 
         if (options.output) {

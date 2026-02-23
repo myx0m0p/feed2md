@@ -1,7 +1,66 @@
-import type { FeedLink, FeedMedia, MarkdownRenderOptions, ParsedFeed } from './types.js'
+import { Eta } from 'eta'
+
+import type {
+  FeedLink,
+  FeedMedia,
+  MarkdownRenderOptions,
+  MarkdownTemplatePreset,
+  ParsedFeed,
+} from './types.js'
 import { collapseWhitespace, escapeMarkdown, sanitizePreview } from './utils.js'
 
 const DEFAULT_SUMMARY_MAX_LENGTH = 280
+const DEFAULT_TEMPLATE_PRESET: MarkdownTemplatePreset = 'short'
+
+const SHORT_TEMPLATE = `# <%= it.feed.title %>
+
+<% if (it.feed.source) { %>Source: <%= it.feed.source %>
+
+<% } %><% if (it.items.length === 0) { %>_No articles found._
+<% } else { %>## Articles
+
+<% it.items.forEach((item) => { %>- <%= item.header %>
+<% item.shortLines.forEach((line) => { %>  - <%= line %>
+<% }) %><% }) %><% } %>`
+
+const FULL_TEMPLATE = `# <%= it.feed.title %>
+
+<% if (it.feed.source) { %>Source: <%= it.feed.source %>
+
+<% } %><% it.feed.fullLines.forEach((line) => { %><%= line %>
+<% }) %><% if (it.feed.fullLines.length > 0) { %>
+<% } %><% if (it.items.length === 0) { %>_No articles found._
+<% } else { %>## Articles
+
+<% it.items.forEach((item) => { %>- <%= item.header %>
+<% item.fullLines.forEach((line) => { %>  - <%= line %>
+<% }) %><% }) %><% } %>`
+
+const BUILTIN_TEMPLATES: Record<MarkdownTemplatePreset, string> = {
+  full: FULL_TEMPLATE,
+  short: SHORT_TEMPLATE,
+}
+
+const templateEngine = new Eta({
+  autoEscape: false,
+  autoTrim: false,
+})
+
+interface MarkdownTemplateData {
+  feed: {
+    fullLines: string[]
+    source?: string
+    title: string
+  }
+  includeSummary: boolean
+  items: Array<{
+    fullLines: string[]
+    header: string
+    shortLines: string[]
+  }>
+  preset: MarkdownTemplatePreset
+  raw: ParsedFeed
+}
 
 function normalizeRenderOptions(
   limitOrOptions?: number | MarkdownRenderOptions,
@@ -13,12 +72,27 @@ function normalizeRenderOptions(
   return limitOrOptions ?? {}
 }
 
+function cleanTemplateOutput(output: string): string {
+  return output
+    .split('\n')
+    .map((line) => line.trimEnd())
+    .join('\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trimEnd()
+}
+
+function normalizeText(value: string): string {
+  return escapeMarkdown(collapseWhitespace(value))
+}
+
 function renderLink(link: FeedLink): string {
   if (!link.rel && !link.type) {
     return link.href
   }
 
-  const qualifiers = [link.rel, link.type].filter((entry): entry is string => Boolean(entry)).join(', ')
+  const qualifiers = [link.rel, link.type]
+    .filter((entry): entry is string => Boolean(entry))
+    .join(', ')
   return `${qualifiers}: ${link.href}`
 }
 
@@ -48,113 +122,89 @@ function renderMedia(media: FeedMedia): string {
   return parts.join(' | ')
 }
 
-export function toMarkdown(
+function createTemplateData(
   feed: ParsedFeed,
-  limitOrOptions?: number | MarkdownRenderOptions,
-): string {
-  const options = normalizeRenderOptions(limitOrOptions)
+  options: MarkdownRenderOptions,
+): MarkdownTemplateData {
   const includeSummary = options.includeSummary ?? true
   const summaryMaxLength = options.summaryMaxLength ?? DEFAULT_SUMMARY_MAX_LENGTH
-
+  const preset = options.templatePreset ?? DEFAULT_TEMPLATE_PRESET
   const cappedItems =
     typeof options.limit === 'number' && options.limit > 0
       ? feed.items.slice(0, options.limit)
       : feed.items
 
-  const lines: string[] = [`# ${escapeMarkdown(feed.title)}`, '']
-
-  if (feed.link) {
-    lines.push(`Source: ${feed.link}`, '')
-  }
-
+  const fullFeedLines: string[] = []
   if (feed.description) {
-    lines.push(`Description: ${escapeMarkdown(collapseWhitespace(feed.description))}`)
+    fullFeedLines.push(`Description: ${normalizeText(feed.description)}`)
   }
-
   if (feed.language) {
-    lines.push(`Language: ${escapeMarkdown(collapseWhitespace(feed.language))}`)
+    fullFeedLines.push(`Language: ${normalizeText(feed.language)}`)
   }
-
   if (feed.published) {
-    lines.push(`Published: ${escapeMarkdown(collapseWhitespace(feed.published))}`)
+    fullFeedLines.push(`Published: ${normalizeText(feed.published)}`)
   }
-
   if (feed.updated) {
-    lines.push(`Updated: ${escapeMarkdown(collapseWhitespace(feed.updated))}`)
+    fullFeedLines.push(`Updated: ${normalizeText(feed.updated)}`)
   }
-
   if (feed.generator) {
-    lines.push(`Generator: ${escapeMarkdown(collapseWhitespace(feed.generator))}`)
+    fullFeedLines.push(`Generator: ${normalizeText(feed.generator)}`)
   }
-
   if (feed.copyright) {
-    lines.push(`Copyright: ${escapeMarkdown(collapseWhitespace(feed.copyright))}`)
+    fullFeedLines.push(`Copyright: ${normalizeText(feed.copyright)}`)
   }
-
   if (feed.ttl) {
-    lines.push(`TTL: ${escapeMarkdown(collapseWhitespace(feed.ttl))}`)
+    fullFeedLines.push(`TTL: ${normalizeText(feed.ttl)}`)
   }
-
   if (feed.id) {
-    lines.push(`ID: ${escapeMarkdown(collapseWhitespace(feed.id))}`)
+    fullFeedLines.push(`ID: ${normalizeText(feed.id)}`)
   }
-
   if (feed.image?.url) {
-    lines.push(`Image: ${feed.image.url}`)
+    fullFeedLines.push(`Image: ${feed.image.url}`)
   }
 
   const extraFeedLinks = (feed.links ?? []).filter((link) => link.href !== feed.link)
   if (extraFeedLinks.length > 0) {
-    lines.push(`Links: ${extraFeedLinks.map((link) => renderLink(link)).join(', ')}`)
+    fullFeedLines.push(`Links: ${extraFeedLinks.map((link) => renderLink(link)).join(', ')}`)
   }
 
-  if (lines[lines.length - 1] !== '') {
-    lines.push('')
-  }
-
-  if (cappedItems.length === 0) {
-    lines.push('_No articles found._')
-    return lines.join('\n')
-  }
-
-  lines.push('## Articles', '')
-
-  for (const item of cappedItems) {
-    const title = escapeMarkdown(item.title)
-    const link = item.link ? `(${item.link})` : ''
-    lines.push(`- ${title}${link ? ` - ${link}` : ''}`)
+  const items = cappedItems.map((item) => {
+    const shortLines: string[] = []
+    const fullLines: string[] = []
 
     if (item.published) {
-      lines.push(`  - Published: ${escapeMarkdown(collapseWhitespace(item.published))}`)
+      const value = `Published: ${normalizeText(item.published)}`
+      shortLines.push(value)
+      fullLines.push(value)
     }
 
     if (item.updated) {
-      lines.push(`  - Updated: ${escapeMarkdown(collapseWhitespace(item.updated))}`)
+      fullLines.push(`Updated: ${normalizeText(item.updated)}`)
     }
 
     if (item.id) {
-      lines.push(`  - ID: ${escapeMarkdown(collapseWhitespace(item.id))}`)
+      fullLines.push(`ID: ${normalizeText(item.id)}`)
     }
 
     if (item.author) {
-      lines.push(`  - Author: ${escapeMarkdown(collapseWhitespace(item.author))}`)
+      fullLines.push(`Author: ${normalizeText(item.author)}`)
     }
 
     if (item.categories && item.categories.length > 0) {
       const categories = item.categories.map((category) => category.name).join(', ')
-      lines.push(`  - Categories: ${escapeMarkdown(collapseWhitespace(categories))}`)
+      fullLines.push(`Categories: ${normalizeText(categories)}`)
     }
 
     const extraItemLinks = (item.links ?? []).filter((link) => link.href !== item.link)
     if (extraItemLinks.length > 0) {
-      lines.push(`  - Links: ${extraItemLinks.map((link) => renderLink(link)).join(', ')}`)
+      fullLines.push(`Links: ${extraItemLinks.map((link) => renderLink(link)).join(', ')}`)
     }
 
     if (item.media && item.media.length > 0) {
       for (const mediaItem of item.media) {
         const renderedMedia = renderMedia(mediaItem)
         if (renderedMedia) {
-          lines.push(`  - Media: ${escapeMarkdown(renderedMedia)}`)
+          fullLines.push(`Media: ${escapeMarkdown(renderedMedia)}`)
         }
       }
     }
@@ -162,10 +212,56 @@ export function toMarkdown(
     if (includeSummary && item.summary) {
       const preview = sanitizePreview(item.summary, summaryMaxLength)
       if (preview) {
-        lines.push(`  - Summary: ${escapeMarkdown(preview)}`)
+        const summaryLine = `Summary: ${escapeMarkdown(preview)}`
+        shortLines.push(summaryLine)
+        fullLines.push(summaryLine)
       }
     }
+
+    const title = escapeMarkdown(item.title)
+    const header = item.link ? `${title} - (${item.link})` : title
+
+    return {
+      fullLines,
+      header,
+      shortLines,
+    }
+  })
+
+  return {
+    feed: {
+      fullLines: fullFeedLines,
+      ...(feed.link ? { source: feed.link } : {}),
+      title: escapeMarkdown(feed.title),
+    },
+    includeSummary,
+    items,
+    preset,
+    raw: feed,
+  }
+}
+
+function resolveTemplate(options: MarkdownRenderOptions): string {
+  if (options.template) {
+    return options.template
   }
 
-  return lines.join('\n')
+  const preset = options.templatePreset ?? DEFAULT_TEMPLATE_PRESET
+  return BUILTIN_TEMPLATES[preset]
+}
+
+export function toMarkdown(
+  feed: ParsedFeed,
+  limitOrOptions?: number | MarkdownRenderOptions,
+): string {
+  const options = normalizeRenderOptions(limitOrOptions)
+  const data = createTemplateData(feed, options)
+  const template = resolveTemplate(options)
+  const rendered = templateEngine.renderString(template, data)
+
+  if (typeof rendered !== 'string') {
+    throw new Error('Failed to render markdown template.')
+  }
+
+  return cleanTemplateOutput(rendered)
 }

@@ -133,8 +133,9 @@ function selectPrimaryLink(links: FeedLink[]): string | undefined {
   }
 
   const preferred =
-    links.find((link) => link.rel === undefined || link.rel === 'alternate' || link.rel === 'standout') ??
-    links[0]
+    links.find(
+      (link) => link.rel === undefined || link.rel === 'alternate' || link.rel === 'standout',
+    ) ?? links[0]
 
   return preferred?.href
 }
@@ -150,7 +151,9 @@ function primaryLinkFromPaths(node: FeedNode, paths: readonly string[]): string 
 
 function parseAuthor(value: unknown): string | undefined {
   if (Array.isArray(value)) {
-    const authors = value.map((entry) => parseAuthor(entry)).filter((entry): entry is string => Boolean(entry))
+    const authors = value
+      .map((entry) => parseAuthor(entry))
+      .filter((entry): entry is string => Boolean(entry))
     return authors.length > 0 ? authors.join(', ') : undefined
   }
 
@@ -185,7 +188,10 @@ function parseCategories(value: unknown): FeedCategory[] | undefined {
   for (const rawCategory of ensureArray(value as unknown | unknown[] | undefined)) {
     const record = asRecord(rawCategory)
     const name =
-      firstText(rawCategory) ?? firstText(record?.['@_term']) ?? firstText(record?.term) ?? firstText(record?.name)
+      firstText(rawCategory) ??
+      firstText(record?.['@_term']) ??
+      firstText(record?.term) ??
+      firstText(record?.name)
 
     if (!name) {
       continue
@@ -249,7 +255,9 @@ function parseMediaContent(
   const height = firstText(record?.['@_height']) ?? firstText(record?.height)
   const credit = firstText(record?.['media:credit']) ?? firstText(record?.credit) ?? fallbackCredit
   const description =
-    firstText(record?.['media:description']) ?? firstText(record?.description) ?? fallbackDescription
+    firstText(record?.['media:description']) ??
+    firstText(record?.description) ??
+    fallbackDescription
 
   if (!url && !medium && !type && !width && !height && !credit && !description) {
     return undefined
@@ -268,7 +276,10 @@ function parseMediaContent(
 
 function mediaFromNode(node: FeedNode): FeedMedia[] | undefined {
   const fallbackCredit = firstTextFromPaths(node, ['media:credit', 'media:group.media:credit'])
-  const fallbackDescription = firstTextFromPaths(node, ['media:description', 'media:group.media:description'])
+  const fallbackDescription = firstTextFromPaths(node, [
+    'media:description',
+    'media:group.media:description',
+  ])
   const mediaCandidates = [
     ...ensureArray(getPath(node, 'media:content') as unknown | unknown[] | undefined),
     ...ensureArray(getPath(node, 'media:group.media:content') as unknown | unknown[] | undefined),
@@ -279,7 +290,12 @@ function mediaFromNode(node: FeedNode): FeedMedia[] | undefined {
     .filter((candidate): candidate is FeedMedia => Boolean(candidate))
 
   if (media.length === 0 && (fallbackCredit || fallbackDescription)) {
-    return [{ ...(fallbackCredit ? { credit: fallbackCredit } : {}), ...(fallbackDescription ? { description: fallbackDescription } : {}) }]
+    return [
+      {
+        ...(fallbackCredit ? { credit: fallbackCredit } : {}),
+        ...(fallbackDescription ? { description: fallbackDescription } : {}),
+      },
+    ]
   }
 
   if (media.length === 0) {
@@ -507,8 +523,8 @@ function parseWithTemplate(
     throw new Error('Invalid feed format.')
   }
 
-  const items = ensureArray(getPath(root, itemPath) as unknown | unknown[] | undefined).map((entry) =>
-    parseNode(asRecord(entry) ?? {}, itemTemplate),
+  const items = ensureArray(getPath(root, itemPath) as unknown | unknown[] | undefined).map(
+    (entry) => parseNode(asRecord(entry) ?? {}, itemTemplate),
   )
 
   return {
@@ -523,7 +539,13 @@ const rssItemTemplate = createItemTemplate({
   idPaths: ['guid'],
   linkPaths: ['link', 'atom:link'],
   publishedPaths: ['pubDate', 'date', 'published'],
-  summaryPaths: ['description', 'content:encoded', 'content', 'dc:description', 'media:description'],
+  summaryPaths: [
+    'description',
+    'content:encoded',
+    'content',
+    'dc:description',
+    'media:description',
+  ],
   titlePaths: ['title'],
   updatedPaths: ['updated'],
 })

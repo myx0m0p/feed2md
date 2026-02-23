@@ -64,6 +64,8 @@ Options:
 - `--limit <number>`: limit article count
 - `--no-summary`: skip preview text
 - `--summary-max-length <number>`: truncate summary preview
+- `--template <preset>`: built-in template preset (`short` or `full`, default: `short`)
+- `--template-file <path>`: load a custom [Eta](https://eta.js.org/) template file
 
 Examples:
 
@@ -76,6 +78,12 @@ npx @myx0m0p/feed2md https://example.com/feed.xml --output feed.md
 
 # limit items and shorten previews
 npx @myx0m0p/feed2md https://example.com/feed.xml --limit 5 --summary-max-length 140
+
+# render with full metadata template
+npx @myx0m0p/feed2md https://example.com/feed.xml --template full
+
+# render with a custom Eta template file
+npx @myx0m0p/feed2md https://example.com/feed.xml --template-file ./templates/feed.eta
 ```
 
 ## Library usage
@@ -87,6 +95,7 @@ const markdown = await feed2md('https://example.com/feed.xml', {
   limit: 10,
   includeSummary: true,
   summaryMaxLength: 220,
+  templatePreset: 'short', // default
 })
 
 console.log(markdown)
@@ -104,6 +113,8 @@ Options (`Feed2MdOptions`):
 - `includeSummary?: boolean` (default: `true`)
 - `limit?: number`
 - `summaryMaxLength?: number` (default: `280`)
+- `templatePreset?: 'short' | 'full'` (default: `'short'`)
+- `template?: string` (custom Eta template content; overrides `templatePreset`)
 
 ### `parseFeed(xml)`
 
@@ -125,7 +136,24 @@ Renders normalized feed data to Markdown.
 Supports:
 
 - `toMarkdown(feed, 5)` (legacy numeric limit)
-- `toMarkdown(feed, { limit, includeSummary, summaryMaxLength })`
+- `toMarkdown(feed, { limit, includeSummary, summaryMaxLength, templatePreset, template })`
+
+Built-in templates:
+
+- `short` (default): compact output for title/link/date/summary
+- `full`: includes all normalized feed/item metadata
+
+Custom templates use Eta syntax and receive context as `it`:
+
+- `it.feed`: rendered feed view (`title`, `source`, `fullLines`)
+- `it.items`: rendered item views (`header`, `shortLines`, `fullLines`)
+- `it.raw`: raw normalized `ParsedFeed`
+- `it.includeSummary`: effective summary toggle
+- `it.preset`: selected preset (`short` or `full`)
+
+## Input/Output Samples
+
+See [`docs/SAMPLES.md`](docs/SAMPLES.md) for concrete XML input and rendered markdown output examples.
 
 ## Does RSS/Atom include article preview text?
 
