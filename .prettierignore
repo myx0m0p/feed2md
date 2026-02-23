@@ -1,0 +1,46 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Production builds
+dist/
+build/
+out/
+
+# Generated files
+*.d.ts
+*.generated.*
+
+# Package manager files
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# Environment files
+.env*
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Turbo
+.turbo/
+
+# SQLite
+*.db
+*.sqlite
+*.sqlite3
+
+# Protocol buffers
+*.proto
+
+# Coverage
+coverage/

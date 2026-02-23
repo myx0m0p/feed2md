@@ -1,0 +1,71 @@
+{
+  "name": "@myx0m0p/feed2md",
+  "version": "0.0.1",
+  "description": "Convert RSS and Atom feeds to readable Markdown",
+  "license": "MIT",
+  "type": "module",
+  "packageManager": "pnpm@10.14.0",
+  "engines": {
+    "node": ">=24"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "bin": {
+    "feed2md": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CONTRIBUTING.md",
+    "CODE_OF_CONDUCT.md",
+    "SECURITY.md"
+  ],
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/myx0m0p/feed2md.git"
+  },
+  "bugs": {
+    "url": "https://github.com/myx0m0p/feed2md/issues"
+  },
+  "homepage": "https://github.com/myx0m0p/feed2md#readme",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rm -rf dist coverage",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check",
+    "lint": "tsc --noEmit",
+    "prepare": "pnpm run build",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "keywords": [
+    "atom",
+    "cli",
+    "feed",
+    "markdown",
+    "rss",
+    "typescript"
+  ],
+  "dependencies": {
+    "commander": "^14.0.3",
+    "fast-xml-parser": "^5.3.7"
+  },
+  "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^6.0.2",
+    "@types/node": "^24.0.0",
+    "prettier": "^3.8.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
+  }
+}
